@@ -13,9 +13,6 @@ var app = express();
 // open mongoose connection
 mongoose.connect();
 
-// listen to requests
-app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
