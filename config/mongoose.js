@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const logger = require('./../config/logger');
 const { mongo, env } = require('./vars');
 
+const migration = require('../lib/migration.lib');
+
 // set mongoose Promise to Bluebird
 mongoose.Promise = Promise;
 
@@ -23,14 +25,20 @@ if (env === 'development') {
  * @public
  */
 exports.connect = () => {
+  console.log('mongodb://127.0.0.1:27017/express-development');
   mongoose
-    .connect(mongo.uri, {
+    .connect('mongodb://127.0.0.1:27017/express-development', {
       useCreateIndex: true,
       keepAlive: 1,
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     })
-    .then(() => console.log('mongoDB connected...'));
+    .then(() => {
+      console.log('mongoDB connected...')
+      migration.migratePermissions()
+      migration.migrateRoles()
+      migration.migrateUsers()
+    });
   return mongoose.connection;
 };
