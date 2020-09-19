@@ -1,4 +1,6 @@
+var jwt = require('jsonwebtoken');
 
+const { jwt_key } = require('../config/vars')
 const userModel = require('../models/user-model')
 
 
@@ -10,10 +12,13 @@ exports.login = async (req, res) => {
             username: req.body.username
         })
 
-        console.log(userModel, 'userModel');
+        console.log(await user, 'user');
         
         if(user && await user.verifyPassword(req.body.password)){
-           return res.json(user)
+           return res.json({
+               ...user._doc,
+               token: jwt.sign(user._doc, jwt_key, { algorithm: 'HS256' })
+            })
         }
 
        throw new Error("Username/password not found")

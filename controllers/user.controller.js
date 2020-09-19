@@ -5,7 +5,8 @@ const userModel = require('../models/user-model')
 exports.All = async (req, res) => {
 
     try {
-    
+
+        // return res.json(req.state.user)
         const users = await userModel.find({})
 
         res.json(users)
