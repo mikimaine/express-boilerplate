@@ -34,11 +34,12 @@ exports.connect = () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
     })
-    .then(() => {
+    .then(async () => {
       console.log('mongoDB connected...')
-      migration.migratePermissions()
-      migration.migrateRoles()
-      migration.migrateUsers()
+
+      await migration.migratePermissions()
+      await migration.migrateRoles()
+      await migration.migrateUsers()
     });
   return mongoose.connection;
 };

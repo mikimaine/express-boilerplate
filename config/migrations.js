@@ -10,15 +10,17 @@ const permissions = [
     'view role',
     'update role',
     'remove role',
-
-    'create profile',
-    'update profile',
-    'sample'
 ]
 
 const roles = {
     admin: [...permissions],
-    user: []
+    user: [],
+    manager: [
+        'view any user',
+        'view user',
+        'view any role',
+        'view role'
+    ]
 }
 
 const users = [
