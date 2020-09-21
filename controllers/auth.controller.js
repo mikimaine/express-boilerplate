@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+const Joi = require('joi');
 
 const { jwt_key } = require('../config/vars')
 const userModel = require('../models/user-model')
@@ -23,7 +24,7 @@ exports.login = async (req, res) => {
             user._doc.roles = user._doc.roles.map(role => role.name)
            return res.json({
                ...user._doc,
-               token: jwt.sign(user._doc, jwt_key, { algorithm: 'HS256' })
+               token: jwt.sign({data: user._doc, exp: Math.floor(Date.now() / 1000) - 30 ,}, jwt_key, { algorithm: 'HS256' })
             })
         }
 
@@ -45,9 +46,9 @@ exports.signup = async (req, res) => {
         const user = await userModel.create(req.body)
         res.json(user)
     } catch (error) {
-        res.status(404).json({
+        res.status(400).json({
             error: true,
-            message: error
+            message: error.message
         })
     }
 

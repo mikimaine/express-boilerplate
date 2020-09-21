@@ -1,5 +1,6 @@
 var router = require("express-promise-router")();
 
+const  {userFormRequest} = require('../middlewares/form-request/user')
 const { hasPermissions } = require('../middlewares/auth');
 const userController = require('../controllers/user.controller')
 
@@ -10,7 +11,7 @@ router.get('/', hasPermissions(['view any user', 'view user']),userController.Al
 router.get('/:id', hasPermissions(['view user']),userController.get);
 
 /* Create a new user */
-router.post('/', hasPermissions(['create user']), userController.create);
+router.post('/', hasPermissions(['create user']) && userFormRequest('createUser'), userController.create);
 
 /* Update */
 router.patch('/:id', hasPermissions(['update user']), userController.update);
