@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', function preSave(next) {
     let model = this
 
-    userSchema.statics.hashPasswd(model.password, (err, hash) => {
+    model.hashPasswd(model.password, (err, hash) => {
         model.password = hash
         next()
     })
