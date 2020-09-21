@@ -6,8 +6,9 @@ var jwt = require('express-jwt');
 
 const mongoose = require('./config/mongoose');
 const { jwt_key } = require('./config/vars');
+const { routes } = require('./config/routes');
 
-const { passport } = require('./middlewares/auth');
+const { hasPermissions } = require('./middlewares/auth');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,12 +25,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(jwt({ secret: jwt_key, algorithms: ['HS256']})
-// .unless({path: ['auth/login']}));
+
+
+app.use(jwt({ secret: jwt_key, algorithms: ['HS256']})
+.unless({path: routes.public})); // Auth
 
 // login information state
 app.use('/', indexRouter);
-app.use('/users', passport(['view user']), usersRouter);
-app.use('/auth',passport,  authRouter);
+app.use('/users', usersRouter); // autho
+app.use('/auth', authRouter);
 
 module.exports = app;

@@ -7,14 +7,20 @@ const userModel = require('../models/user-model')
 exports.login = async (req, res) => {
 
     try {
-    
         const user = await userModel.findOne({
             username: req.body.username
-        })
+        }).populate({ path: 'roles', populate: {path: 'permissions'} });
 
-        console.log(await user, 'user');
-        
         if(user && await user.verifyPassword(req.body.password)){
+            // 1. map through all roles
+            // 2. find each permissions inside the role
+            // 3. combine permissions
+            let permissions =  user._doc.roles.reduce((prev, next) => {
+                return [...prev, ...next.permissions.map(permission => permission.name)]
+            },[])
+            user._doc.permissions = Array.from(new Set([...user._doc.permissions.map(v => v.name), ...permissions ]))
+
+            user._doc.roles = user._doc.roles.map(role => role.name)
            return res.json({
                ...user._doc,
                token: jwt.sign(user._doc, jwt_key, { algorithm: 'HS256' })
@@ -36,7 +42,7 @@ exports.login = async (req, res) => {
 exports.signup = async (req, res) => {
 
     try {
-        const user = await userModel.findById(req.params.id)
+        const user = await userModel.create(req.body)
         res.json(user)
     } catch (error) {
         res.status(404).json({
