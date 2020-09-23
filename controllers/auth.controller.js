@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
             user._doc.roles = user._doc.roles.map(role => role.name)
            return res.json({
                ...user._doc,
-               token: jwt.sign({data: user._doc, exp: Math.floor(Date.now() / 1000) - 30 ,}, jwt_key, { algorithm: 'HS256' })
+               token: jwt.sign({data: user._doc, exp: Math.floor(Date.now() / 1000) + (60 * 60),}, jwt_key, { algorithm: 'HS256' })
             })
         }
 

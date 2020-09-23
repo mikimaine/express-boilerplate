@@ -3,12 +3,13 @@ exports.hasPermissions = (permissions) => (req, res, next)  => {
     const { user } = req
     const errors = []
     try {
+
         if(user) {
             if (typeof permissions === 'string'){
                 permissions = [permissions]
             }
             permissions.forEach(permission => {
-                if(!user.permissions.includes(permission)) {
+                if(!user.data.permissions.includes(permission)) {
                     errors.push(`You dont have ${permission} permission`)
                 }
             });
