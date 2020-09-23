@@ -1,3 +1,4 @@
+const { pick } = require('lodash')
 
 const userModel = require('../models/user-model')
 
@@ -5,14 +6,41 @@ const userModel = require('../models/user-model')
 exports.All = async (req, res) => {
 
     try {
-        const users = await userModel.find({})
+
+        let sort = {}
+        if(req.query.sort) {
+            sort[req.query.sort] = req.query.asc ? 1 :-1 
+        }
+
+        let query = {}
+
+        if(req.query.filter) {
+            let filter = JSON.parse(req.query.filter);
+            // Object.keys(filter).forEach(index => {
+            //     if(typeof filter[index] !== 'string' || typeof filter[index] !== 'number') {
+            //         delete filter[index]
+            //     }
+            // }) 
+            query = pick(filter, ['username', 'email', 'active']) 
+            
+        }
+        
+        const options = {
+            sort: Object.values(sort).length > 0 ? sort: {
+                'created_at': -1
+            },
+            page: req.query.page || 1,
+            limit: req.query.limit || 10,
+            populate: { path: 'roles', populate: {path: 'permissions'}}
+        }
+        const users = await userModel.paginate(query,options)
 
         res.json(users)
 
     } catch (error) {
         res.status(400).json({
             error: true,
-            message: error
+            message: error.message
         })
     }
     

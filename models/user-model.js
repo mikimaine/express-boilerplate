@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
@@ -13,8 +14,8 @@ const userSchema = new mongoose.Schema({
     permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Permissions' }],
     archived: { type: Boolean, default: false },
     last_login: { type: Date },
-    created_at: { type: Date },
-    updated_at: { type: Date }
+    created_at: { type: Date, default: new Date() },
+    updated_at: { type: Date, default: new Date() }
 })
 
 // methods
@@ -65,6 +66,7 @@ userSchema.method({
 })
  
 
-// attributes
+// plugins
+userSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('User', userSchema);
