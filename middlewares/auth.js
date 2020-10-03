@@ -29,3 +29,18 @@ exports.hasPermissions = (permissions) => (req, res, next)  => {
         })
       }
 }
+
+
+exports.nest = (i, i1 = null, link2 = 'parent') => {
+    if(!Array.isArray(i)) {
+        throw new TypeError('Items should be a valid array')
+    }
+     var result = (items, id = null, link = 'parent') => items
+    .filter(item => item[link] === id)
+    .map(item => ({
+      ...item,
+      text: item.name, value: item.id, children: result(items, item.id)
+    }));
+
+    return result(i, i1, link2)
+} 
