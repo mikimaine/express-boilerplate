@@ -1,8 +1,8 @@
 var router = require("express-promise-router")();
 
-const  {userFormRequest} = require('../middlewares/form-request/user')
-const { hasPermissions } = require('../middlewares/auth');
-const userController = require('../controllers/user.controller')
+const  {userFormRequest} = require('../../middlewares/form-request/user')
+const { hasPermissions } = require('../../middlewares/auth');
+const userController = require('../../controllers/user.controller')
 
 /**
  * @typedef USER

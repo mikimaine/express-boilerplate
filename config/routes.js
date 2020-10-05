@@ -1,8 +1,8 @@
 exports.routes = {
     public: [
-        '/auth/login',
-        '/auth/signup',
-        '/auth/forget-password',
-        '/auth/reset-password'
+        '/v1/auth/login',
+        '/v1/auth/signup',
+        '/v1/auth/forget-password',
+        '/v1/auth/reset-password'
     ]
 }

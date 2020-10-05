@@ -8,11 +8,7 @@ const mongoose = require('./config/mongoose');
 const { jwt_key, port } = require('./config/vars');
 const { routes } = require('./config/routes');
 
-const { hasPermissions } = require('./middlewares/auth');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth');
+const versionOneRouter = require('./routes/v1.router');
 
 var app = express();
 
@@ -65,8 +61,7 @@ app.use(jwt({ secret: jwt_key, algorithms: ['HS256']})
 
 
 // login information state
-app.use('/', indexRouter);
-app.use('/users', usersRouter); // autho
-app.use('/auth', authRouter);
+app.use('/v1', versionOneRouter)
+
 
 module.exports = app;
